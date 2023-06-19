@@ -42,6 +42,7 @@ const demo_blog = async () => {
 		writing_date: "2023-01-25 ",
 		thumb_image: "images/1.jpg",
 		published: true,
+		status: true,
 		seo_title: "Men's football team finally going to Asiad",
 		seo_description: "In the last edition of the Asian Games in 2018, the men in red and green reached ",
 		seo_keyword:"football, entertainment, world-cup",
