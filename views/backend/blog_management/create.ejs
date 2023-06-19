@@ -1,48 +1,124 @@
 <%- include('../../layouts/dashboard/head') %>
     <%- include('../../layouts/dashboard/top_nav') %>
         <%- include('../../layouts/dashboard/main_content_top_html') %>
+            <link rel="stylesheet" href="/backend/plugins/select2/css.css">
+            <script src="/backend/plugins/select2/js.js"></script>
+            <script src="/backend/plugins/tinymce.js"></script>
             <div id="layoutSidenav_content">
                 <main class="pb-3">
                     <div class="container-fluid px-4">
-                        <h5 class="mt-4">Static Navigation</h5>
+                        <h5 class="mt-4">Create Blog</h5>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Static Navigation</li>
+                            <li class="breadcrumb-item active">Create categoy</li>
                         </ol>
-                        <form method="Post" action="#">
+                        <form method="Post" action="/dashboard/category/create">
                             <div class="card">
                                 <div class="card-header">
                                     Create
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-group mb-3">
-                                        <label for="title">title</label>
-                                        <input name="title" id="title" type="text" class="form-control">
+                                    <div class="row">
+                                        <div class="col-lg-8" style="border-right: 1px solid gray">
+                                            <div class="form-group mb-3">
+                                                <label for="short_description">Short Description</label>
+                                                <textarea name="short_description" id="short_description" class="form-control"></textarea>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="description">Full Description</label>
+                                                <textarea name="description" id="description" class="form-control"></textarea>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div>
+                                                <h4>SEO information</h4>
+                                                <div class="form-group mb-3">
+                                                    <label for="seo_title">seo_title</label>
+                                                    <input name="seo_title" id="seo_title" type="text" class="form-control">
+                                                </div>
+        
+                                                <div class="form-group mb-3">
+                                                    <label for="seo_description">seo description</label>
+                                                    <textarea name="seo_description" id="seo_description" class="form-control"></textarea>
+                                                </div>
+        
+                                                <div class="form-group mb-3">
+                                                    <label for="seo_keyword">seo description</label>
+                                                    <textarea name="seo_keyword" id="seo_keyword" class="form-control"></textarea>
+                                                </div>
+        
+                                                <div class="form-group mb-3">
+                                                    <label for="tag">Tags</label>
+                                                    <select multiple name="tag" id="tag" class="form-select tag_select"></select>
+                                                </div>
+        
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group mb-3">
+                                                <label for="title">title</label>
+                                                <input name="title" id="title" type="text" class="form-control">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="category">Category</label>
+                                                <select multiple name="category[]" id="category" class="form-select category_select">
+                                                    
+                                                    <option value="category1">category1</option>
+                                                    <option value="category2">category2</option>
+                                                    <option value="category3">category3</option>
+                                                    <option value="category4">category4</option>
+                                                    <option value="category5">category5</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="writer">writer</label>
+                                                <select multiple name="writer" id="writer" class="form-select writer_select">
+                                                    <option value="writer1">writer1</option>
+                                                    <option value="writer1">writer2</option>
+                                                    <option value="writer1">writer3</option>
+                                                    <option value="writer1">writer4</option>
+                                                    <option value="writer1">writer5</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="translator">translator</label>
+                                                <select multiple name="translator" id="translator" class="form-select translator_select">
+                                                    <option value="translator1">translator1</option>
+                                                    <option value="translator1">translator2</option>
+                                                    <option value="translator1">translator3</option>
+                                                    <option value="translator1">translator4</option>
+                                                    <option value="translator1">translator5</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="writing_date">writing_date</label>
+                                                <input name="writing_date" id="writing_date" type="date" class="form-control">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="thumb_image">thumb_image</label>
+                                                <input name="thumb_image" id="thumb_image" type="file" accept="image/*" class="form-control">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="related_images">related_images</label>
+                                                <input name="related_images[]" id="related_images" type="file" accept="image/*" class="form-control">
+                                            </div>
+                                            
+                                            <div class="form-group mb-3">
+                                                <div>
+                                                    <label for="published">is published?</label>
+                                                </div>
+                                                <label for="yes">
+                                                    <input name="published" id="yes" value="true" type="radio"> yes
+                                                </label> &nbsp;&nbsp;
+                                                <label for="no">
+                                                    <input name="published" id="no" checked value="false" type="radio"> no
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group mb-3">
-                                        <label for="category">category</label>
-                                        <input name="category" id="category" type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="author">author</label>
-                                        <input name="author" id="author" type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="image">image</label>
-                                        <input name="image" id="image" type="file" class="form-control">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="tags">tags</label>
-                                        <input name="tags" id="tags" type="file" class="form-control">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="short_description">short description</label>
-                                        <textarea name="short_description" id="short_description" type="file" class="form-control"></textarea>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="description">description</label>
-                                        <textarea name="description" id="description" type="file" class="form-control"></textarea>
-                                    </div>
+                                   
+                                    
+                                    
                                 </div>
                                 <div class="card-footer">
                                     <button class="btn btn-info">Submit</button>
@@ -52,4 +128,24 @@
                     </div>
                 </main>
             </div>
+            <script>
+                $(document).ready(function() {
+                    let configs = {
+                        placeholder: "Select an option",
+                        allowClear: true,
+                    }
+                    $('.category_select').select2(configs);
+                    $('.writer_select').select2(configs);
+                    $('.translator_select').select2(configs);
+                    $('.tag_select').select2({...configs, tags:true});
+
+                    tinymce.init({
+                        selector: '#short_description'
+                    });
+
+                    tinymce.init({
+                        selector: '#description'
+                    });
+                });
+            </script>
             <%- include('../../layouts/dashboard/main_content_bottom_html') %>
