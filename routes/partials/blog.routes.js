@@ -1,12 +1,11 @@
 const express = require("express");
 const isAuthMiddleware = require("../../app/middlewares/isAuth.middleware");
+const blogController = require("../../app/controllers/backend/blog.controller");
 const router = express.Router();
 
 router
 	.use(isAuthMiddleware())
-	.get("/dashboard/blog", function (req, res) {
-		return res.render("backend/blog_management/all");
-	})
+	.get("/dashboard/blog", blogController.all)
 	.get("/dashboard/blog/create", function (req, res) {
 		return res.render("backend/blog_management/create");
 	})
