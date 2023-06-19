@@ -87,6 +87,11 @@ module.exports = mongoose.model(
 			seo_title: String,
 			seo_description: String,
 			seo_keyword: String,
+			tags: {
+				type: Array,
+				default: [],
+				required: false,
+			},
 		},
 		{
 			timestamps: true,
