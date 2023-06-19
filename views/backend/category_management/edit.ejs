@@ -1,0 +1,32 @@
+<%- include('../../layouts/dashboard/head') %>
+    <%- include('../../layouts/dashboard/top_nav') %>
+        <%- include('../../layouts/dashboard/main_content_top_html') %>
+            <div id="layoutSidenav_content">
+                <main class="pb-3">
+                    <div class="container-fluid px-4">
+                        <h5 class="mt-4">Edit Data</h5>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Edit Category</li>
+                        </ol>
+                        <form method="Post" action="/dashboard/category/<%= data._id %>/edit">
+                            <div class="card">
+                                <div class="card-header">
+                                    Edit
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="title">title</label>
+                                        <input value="<%= data.title %>" name="title" id="title" type="text" class="form-control">
+                                    </div>
+                                  
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-info">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+            <%- include('../../layouts/dashboard/main_content_bottom_html') %>

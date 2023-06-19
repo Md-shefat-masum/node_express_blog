@@ -1,0 +1,55 @@
+<%- include('../../layouts/dashboard/head') %>
+    <%- include('../../layouts/dashboard/top_nav') %>
+        <%- include('../../layouts/dashboard/main_content_top_html') %>
+            <div id="layoutSidenav_content">
+                <main class="pb-3">
+                    <div class="container-fluid px-4">
+                        <h5 class="mt-4">Static Navigation</h5>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Static Navigation</li>
+                        </ol>
+                        <form method="Post" action="#">
+                            <div class="card">
+                                <div class="card-header">
+                                    Create
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="title">title</label>
+                                        <input name="title" id="title" type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="category">category</label>
+                                        <input name="category" id="category" type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="author">author</label>
+                                        <input name="author" id="author" type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="image">image</label>
+                                        <input name="image" id="image" type="file" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="tags">tags</label>
+                                        <input name="tags" id="tags" type="file" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="short_description">short description</label>
+                                        <textarea name="short_description" id="short_description" type="file" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="description">description</label>
+                                        <textarea name="description" id="description" type="file" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-info">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+            <%- include('../../layouts/dashboard/main_content_bottom_html') %>
