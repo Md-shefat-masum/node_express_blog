@@ -10,13 +10,16 @@ var cookieParser = require('cookie-parser')
 const formData = require('express-form-data');
 
 // parse application/x-www-form-urlencoded
-server.use(bodyParser.urlencoded({ extended: false }));
+// server.use(bodyParser.urlencoded({ extended: false }));
 server.use(cookieParser())
 
 // parse application/json 01965522673
-server.use(bodyParser.json());
+// server.use(bodyParser.json());
 server.set('json spaces', 4);
 
+server.use(express.urlencoded({
+    extended: true
+}))
 server.use(formData.parse());
 
 server.set("trust proxy", 1); // trust first proxy

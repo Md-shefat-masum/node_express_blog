@@ -3,51 +3,65 @@ const blogModel = require("../../models/blog.model");
 const categoryModel = require("../../models/category.model");
 const translatorModel = require("../../models/translator.model");
 const writerModel = require("../../models/writer.model");
+var fs = require('fs-extra')
+const { dirname } = require('path');
+const appDir = dirname(require.main.filename);
 
 const blog_store_validate = async (req) => {
-    await body("title")
-        .not()
-        .isEmpty()
-        .withMessage("the title field is required")
-        .run(req);
+	await body("title")
+		.not()
+		.isEmpty()
+		.withMessage("the title field is required")
+		.run(req);
 
-    await body("category")
-        .not()
-        .isEmpty()
-        .withMessage("the category field is required")
-        .run(req);
+	await body("category")
+		.not()
+		.isEmpty()
+		.withMessage("the category field is required")
+		.run(req);
 
-    await body("writer")
-        .not()
-        .isEmpty()
-        .withMessage("the writer field is required")
-        .run(req);
+	await body("writer")
+		.not()
+		.isEmpty()
+		.withMessage("the writer field is required")
+		.run(req);
 
-    await body("writing_date")
-        .not()
-        .isEmpty()
-        .withMessage("the writing date field is required")
-        .run(req);
+	await body("writing_date")
+		.not()
+		.isEmpty()
+		.withMessage("the writing date field is required")
+		.run(req);
 
-    await body("short_description")
-        .not()
-        .isEmpty()
-        .withMessage("the short description field is required")
-        .run(req);
+	await body("short_description")
+		.not()
+		.isEmpty()
+		.withMessage("the short description field is required")
+		.run(req);
 
-    await body("description")
-        .not()
-        .isEmpty()
-        .withMessage("the description field is required")
-        .run(req);
+	await body("description")
+		.not()
+		.isEmpty()
+		.withMessage("the description field is required")
+		.run(req);
 
-    let result = validationResult(req);
-    return {
-        errors: result.array(),
-        hasError: result.isEmpty() ? false : true,
-    };
+	let result = validationResult(req);
+	return {
+		errors: result.array(),
+		hasError: result.isEmpty() ? false : true,
+	};
 };
 
+const upload_files = (file, id) => {
+	let file_name = parseInt(Math.random() * 1000) + id + file.name;
+	// const path = __dirname + "/public/uploads/posts/" + file_name;
+	const path = appDir + "/public/uploads/posts/" + file_name;
+	fs.move(file.path, path, function (err) {
+		if (err) return console.error(err)
+		console.log("success!")
+	})
+	thumb_image_path = "uploads/posts/" + file_name;
+	return thumb_image_path;
+}
 const controllers = {
 	folder_prefix: `blog_management`,
 	route_prefix: `blog`,
@@ -81,13 +95,13 @@ const controllers = {
 			.populate("creator")
 			.exec();
 		let count = await blogModel.count();
-		
+
 		return res.render(`backend/${controllers.folder_prefix}/all`, {
 			data,
 			count,
 			page,
 			limit,
-            key,
+			key,
 		});
 	},
 
@@ -95,7 +109,7 @@ const controllers = {
 		const categories = await categoryModel.find();
 		const writers = await writerModel.find();
 		const translators = await translatorModel.find();
-		return res.render(`backend/${controllers.folder_prefix}/create`,{
+		return res.render(`backend/${controllers.folder_prefix}/create`, {
 			categories,
 			writers,
 			translators,
@@ -103,9 +117,10 @@ const controllers = {
 	},
 
 	store: async function (req, res) {
-		console.log(req.body);
+		// console.log(req.files);
+
 		let validator = await blog_store_validate(req);
-		if(validator.hasError){
+		if (validator.hasError) {
 			return res.status(422).json(validator);
 		}
 
@@ -127,10 +142,33 @@ const controllers = {
 			creator: req.session.user._id,
 		};
 
-		let blog = await blogModel.create(data);
+		let blog = {};
 
-		return res.json([req.body, blog]);
-		return res.redirect("/dashboard/blog");
+		try {
+			blog = await blogModel.create(data);
+
+			var thumb_image_path = "";
+			var related_image_path = [];
+
+			if (req.files?.thumb_image && req.files?.thumb_image.size) {
+				thumb_image_path = upload_files(req.files.thumb_image, blog._id)
+			}
+
+			if (req.files?.related_images && req.files?.related_images[0].size) {
+				related_image_path = req.files.related_images.map((file) => upload_files(file, blog._id));
+			}
+
+			blog.thumb_image = thumb_image_path;
+			blog.related_images = related_image_path;
+			blog.save();
+
+		} catch (error) {
+			// console.log(error);
+			return res.status(500).json({msg: "data uploading failed.", error: error})
+		}
+
+		return res.json(blog);
+		// return res.redirect("/dashboard/blog");
 	},
 
 	show: async function (req, res) {
@@ -164,25 +202,25 @@ const controllers = {
 		return res.redirect(`/dashboard/${controllers.route_prefix}`);
 	},
 
-	from_ids: async function (req, res){
+	from_ids: async function (req, res) {
 		let in_ids = req.body.in_ids;
 		let categories = await categoryModel.where("_id").in(in_ids).find().populate('creator').exec();
 		return res.status(200).json(categories);
 	},
 
-	delete_by_ids: async function (req, res){
+	delete_by_ids: async function (req, res) {
 		let in_ids = req.body.in_ids;
 		let categories = await categoryModel.where("_id").in(in_ids).deleteMany().exec();
 		return res.status(200).json(categories);
 	},
 
-	status_update: async function (req, res){
-		let {id, status} = req.body;
+	status_update: async function (req, res) {
+		let { id, status } = req.body;
 		// let category = await categoryModel.where("_id").equals(id).findOne().exec();
 		// category.status = status;
 		// category.save();
-		
-		let response = await categoryModel.updateOne({_id:id},{status: status}).exec();
+
+		let response = await categoryModel.updateOne({ _id: id }, { status: status }).exec();
 		return res.status(200).json(response);
 	},
 };
