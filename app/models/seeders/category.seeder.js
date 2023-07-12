@@ -29,19 +29,19 @@ module.exports = () =>
 		await categoryModel.deleteMany({});
 		// let response = await categoryModel.insertMany(categories);
 
-		for (let index = 0; index < 50; index++) {
-			await categoryModel.create({
-				title: "Category " + (index + 1),
-				creator: "645fc48cef1e9e5ad5a12089",
-			});
-		}
+		// for (let index = 0; index < 50; index++) {
+		// 	await categoryModel.create({
+		// 		title: "Category " + (index + 1),
+		// 		creator: "645fc48cef1e9e5ad5a12089",
+		// 	});
+		// }
 
 		console.log("catetgory seeding complete");
-		// categories.forEach(async (item) => {
-		// 	let category = new categoryModel(item);
-		// 	await category.save();
-		// 	console.log(category);
-		// });
+		categories.forEach(async (item) => {
+			let category = new categoryModel(item);
+			await category.save();
+			console.log(category);
+		});
 
 		console.log("\n");
 

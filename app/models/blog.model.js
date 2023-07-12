@@ -63,12 +63,12 @@ module.exports = mongoose.model(
 				default: Date.now,
 			},
 			translator: {
-				type: Schema.Types.ObjectId,
+				type: [Schema.Types.ObjectId],
 				ref: translatorModel,
 			},
 			thumb_image: {
 				type: String,
-				required: true,
+				// required: true,
 			},
 			related_images: [String],
 			published: {

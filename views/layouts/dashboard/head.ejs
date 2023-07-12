@@ -12,6 +12,26 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script src="/js/csvToArray.v2.1.min.js"></script>
     <script src="/backend/plugins/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/backend/css/custom.css">
+    <script>
+        window.Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+        window.s_alert = (title="success",icon="success") => {
+            Toast.fire({
+                icon,
+                title
+              })
+        }
+    </script>
 </head>
 <body>

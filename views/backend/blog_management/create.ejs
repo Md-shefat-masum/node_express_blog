@@ -12,10 +12,13 @@
                             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                             <li class="breadcrumb-item active">Create categoy</li>
                         </ol>
-                        <form method="Post" action="/dashboard/category/create">
+                        <form method="POST" onsubmit="save_data()" action="/dashboard/blog/create">
                             <div class="card">
-                                <div class="card-header">
-                                    Create
+                                <div class="card-header d-flex justify-content-between">
+                                    <h3>Create</h3>
+                                    <div>
+                                        <a class="btn btn-sm btn-outline-success" href="/dashboard/blog">Back</a>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -43,13 +46,13 @@
                                                 </div>
         
                                                 <div class="form-group mb-3">
-                                                    <label for="seo_keyword">seo description</label>
+                                                    <label for="seo_keyword">seo keywords</label>
                                                     <textarea name="seo_keyword" id="seo_keyword" class="form-control"></textarea>
                                                 </div>
         
                                                 <div class="form-group mb-3">
                                                     <label for="tag">Tags</label>
-                                                    <select multiple name="tag" id="tag" class="form-select tag_select"></select>
+                                                    <select multiple name="tags[]" id="tag" class="form-select tag_select"></select>
                                                 </div>
         
                                             </div>
@@ -62,32 +65,25 @@
                                             <div class="form-group mb-3">
                                                 <label for="category">Category</label>
                                                 <select multiple name="category[]" id="category" class="form-select category_select">
-                                                    
-                                                    <option value="category1">category1</option>
-                                                    <option value="category2">category2</option>
-                                                    <option value="category3">category3</option>
-                                                    <option value="category4">category4</option>
-                                                    <option value="category5">category5</option>
+                                                    <% categories.forEach(category => { %>
+                                                        <option value="<%= category._id %>"><%= category.title %></option>
+                                                    <% }) %>
                                                 </select>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label for="writer">writer</label>
-                                                <select multiple name="writer" id="writer" class="form-select writer_select">
-                                                    <option value="writer1">writer1</option>
-                                                    <option value="writer1">writer2</option>
-                                                    <option value="writer1">writer3</option>
-                                                    <option value="writer1">writer4</option>
-                                                    <option value="writer1">writer5</option>
+                                                <select name="writer" id="writer" class="form-select writer_select">
+                                                    <% writers.forEach(writer => { %>
+                                                        <option value="<%= writer._id %>"><%= writer.name %></option>
+                                                    <% }) %>
                                                 </select>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label for="translator">translator</label>
-                                                <select multiple name="translator" id="translator" class="form-select translator_select">
-                                                    <option value="translator1">translator1</option>
-                                                    <option value="translator1">translator2</option>
-                                                    <option value="translator1">translator3</option>
-                                                    <option value="translator1">translator4</option>
-                                                    <option value="translator1">translator5</option>
+                                                <select name="translators[]" multiple id="translator" class="form-select translator_select">
+                                                    <% translators.forEach(translator => { %>
+                                                        <option value="<%= translator._id %>"><%= translator.name %></option>
+                                                    <% }) %>
                                                 </select>
                                             </div>
                                             <div class="form-group mb-3">
@@ -100,7 +96,7 @@
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label for="related_images">related_images</label>
-                                                <input name="related_images[]" id="related_images" type="file" accept="image/*" class="form-control">
+                                                <input name="related_images[]" multiple id="related_images" type="file" accept="image/*" class="form-control">
                                             </div>
                                             
                                             <div class="form-group mb-3">
@@ -117,8 +113,6 @@
                                         </div>
                                     </div>
                                    
-                                    
-                                    
                                 </div>
                                 <div class="card-footer">
                                     <button class="btn btn-info">Submit</button>
@@ -129,6 +123,47 @@
                 </main>
             </div>
             <script>
+                async function save_data(){
+                    event.preventDefault();
+                    let form = event.target;
+
+                    [...document.querySelectorAll('.form_error')].forEach(el=>el.remove());
+
+                    let formData = new FormData(form);
+                    let response = await fetch(`${form.action}`,{
+                        method: form.method,
+                        headers: {
+                            //"Content-Type": "application/json",
+                            //'Content-Type': 'application/*',
+                        },
+                        body: formData,
+                    })
+
+                    let status = response.status;
+                    let data = await response.json();
+                    if(data.hasError){
+                        s_alert('data validation error', 'error')
+                        let errors = data.errors;
+                        errors.forEach(el=>{
+                            document.getElementById(el.path)?.parentNode.insertAdjacentHTML('beforeend',`
+                                <div class="form_error text-danger">${el.msg}</div>
+                            `)
+                        })
+
+                        return 0;
+                    }
+                    s_alert('data uploaded successfully');
+                    form.reset();
+                    reset_select();
+                    console.log(data);
+                }
+
+                function reset_select(){
+                    $('.category_select').val([]).change();
+                    $('.writer_select').val([]).change();
+                    $('.translator_select').val([]).change();
+                    $('.tag_select').val([]).change();
+                }
                 $(document).ready(function() {
                     let configs = {
                         placeholder: "Select an option",

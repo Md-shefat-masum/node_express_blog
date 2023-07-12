@@ -1,10 +1,57 @@
+const { body, validationResult } = require("express-validator");
 const blogModel = require("../../models/blog.model");
 const categoryModel = require("../../models/category.model");
+const translatorModel = require("../../models/translator.model");
+const writerModel = require("../../models/writer.model");
 
+const blog_store_validate = async (req) => {
+    await body("title")
+        .not()
+        .isEmpty()
+        .withMessage("the title field is required")
+        .run(req);
+
+    await body("category")
+        .not()
+        .isEmpty()
+        .withMessage("the category field is required")
+        .run(req);
+
+    await body("writer")
+        .not()
+        .isEmpty()
+        .withMessage("the writer field is required")
+        .run(req);
+
+    await body("writing_date")
+        .not()
+        .isEmpty()
+        .withMessage("the writing date field is required")
+        .run(req);
+
+    await body("short_description")
+        .not()
+        .isEmpty()
+        .withMessage("the short description field is required")
+        .run(req);
+
+    await body("description")
+        .not()
+        .isEmpty()
+        .withMessage("the description field is required")
+        .run(req);
+
+    let result = validationResult(req);
+    return {
+        errors: result.array(),
+        hasError: result.isEmpty() ? false : true,
+    };
+};
 
 const controllers = {
 	folder_prefix: `blog_management`,
 	route_prefix: `blog`,
+
 	all: async function (req, res) {
 		let page = 1;
 		let skip = 0;
@@ -45,18 +92,45 @@ const controllers = {
 	},
 
 	create: async function (req, res) {
-		return res.render(`backend/${controllers.folder_prefix}/create`);
+		const categories = await categoryModel.find();
+		const writers = await writerModel.find();
+		const translators = await translatorModel.find();
+		return res.render(`backend/${controllers.folder_prefix}/create`,{
+			categories,
+			writers,
+			translators,
+		});
 	},
 
 	store: async function (req, res) {
-		// console.log(req);
+		console.log(req.body);
+		let validator = await blog_store_validate(req);
+		if(validator.hasError){
+			return res.status(422).json(validator);
+		}
+
 		let data = {
 			title: req.body.title,
+			short_description: req.body.short_description,
+			description: req.body.description,
+			category: req.body["category"],
+			writer: req.body.writer,
+			writing_date: req.body.writing_date,
+			translator: req.body["translators"],
+			published: req.body.published,
+			status: true,
+			view: 0,
+			seo_title: req.body.seo_title,
+			seo_description: req.body.seo_description,
+			seo_keyword: req.body.seo_keyword,
+			tags: req.body["tags"],
 			creator: req.session.user._id,
 		};
-		let category = await categoryModel.create(data);
-		return res.redirect("/dashboard/category");
-		// return res.json(category);
+
+		let blog = await blogModel.create(data);
+
+		return res.json([req.body, blog]);
+		return res.redirect("/dashboard/blog");
 	},
 
 	show: async function (req, res) {

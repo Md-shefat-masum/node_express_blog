@@ -6,9 +6,8 @@ const router = express.Router();
 router
 	.use(isAuthMiddleware())
 	.get("/dashboard/blog", blogController.all)
-	.get("/dashboard/blog/create", function (req, res) {
-		return res.render("backend/blog_management/create");
-	})
+	.get("/dashboard/blog/create", blogController.create)
+	.post("/dashboard/blog/create", blogController.store)
 	.get("/dashboard/blog/:id/edit", function (req, res) {
 		return res.render("backend/blog_management/edit");
 	})
