@@ -179,22 +179,68 @@ const controllers = {
 	},
 
 	edit: async function (req, res) {
-		let data = await categoryModel.findOne().where({ _id: req.params.id }).exec();
+		let data = await blogModel.findOne().where({ _id: req.params.id }).exec();
+		const categories = await categoryModel.find();
+		const writers = await writerModel.find();
+		const translators = await translatorModel.find();
 		return res.render(`backend/${controllers.folder_prefix}/edit`, {
 			data,
+			categories,
+			writers,
+			translators,
 		});
 	},
 
 	update: async function (req, res) {
+		let validator = await blog_store_validate(req);
+		if (validator.hasError) {
+			return res.status(422).json(validator);
+		}
+
 		let data = {
 			title: req.body.title,
+			short_description: req.body.short_description,
+			description: req.body.description,
+			category: req.body["category"],
+			writer: req.body.writer,
+			writing_date: req.body.writing_date,
+			translator: req.body["translators"],
+			published: req.body.published,
+			status: true,
+			view: 0,
+			seo_title: req.body.seo_title,
+			seo_description: req.body.seo_description,
+			seo_keyword: req.body.seo_keyword,
+			tags: req.body["tags"],
 			creator: req.session.user._id,
 		};
-		let category = await categoryModel.findOne().where({ _id: req.params.id }).exec();
-		category.title = data.title;
-		category.category = data.creator;
-		category.save();
-		return res.redirect(`/dashboard/${controllers.route_prefix}`);
+
+		let blog = {};
+
+		try {
+			blog = await blogModel.findOneAndUpdate({ _id: req.params.id },data).exec();
+
+			var thumb_image_path = blog.thumb_image || "";
+			var related_image_path = blog.related_images || [];
+
+			if (req.files?.thumb_image && req.files?.thumb_image.size) {
+				thumb_image_path = upload_files(req.files.thumb_image, blog._id)
+			}
+
+			if (req.files?.related_images && req.files?.related_images[0].size) {
+				related_image_path = req.files.related_images.map((file) => upload_files(file, blog._id));
+			}
+
+			blog.thumb_image = thumb_image_path;
+			blog.related_images = related_image_path;
+			blog.save();
+
+		} catch (error) {
+			// console.log(error);
+			return res.status(500).json({msg: "data uploading failed.", error: error})
+		}
+
+		return res.json(blog);
 	},
 
 	destory: async function (req, res) {
