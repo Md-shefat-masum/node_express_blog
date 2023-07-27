@@ -12,6 +12,7 @@ router
 	.post("/dashboard/blog/from-ids", blogController.from_ids)
 	.post("/dashboard/blog/delete-by-ids", blogController.delete_by_ids)
 	.post("/dashboard/blog/status-update", blogController.status_update)
+	.post("/dashboard/blog/published-update", blogController.published_update)
 
 	.get("/dashboard/blog/:id/edit", blogController.edit)
 	.post("/dashboard/blog/:id/edit", blogController.update)
