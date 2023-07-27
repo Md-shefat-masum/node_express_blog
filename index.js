@@ -14,7 +14,7 @@ const formData = require('express-form-data');
 server.use(cookieParser())
 
 // parse application/json 01965522673
-// server.use(bodyParser.json());
+server.use(bodyParser.json());
 server.set('json spaces', 4);
 
 server.use(express.urlencoded({
