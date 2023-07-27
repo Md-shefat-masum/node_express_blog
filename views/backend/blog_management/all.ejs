@@ -72,7 +72,7 @@
                                                                 type="checkbox" class="form-check">
                                                         </td>
                                                         <td>
-                                                            <img height="80px" src="/<%= item.thumb_image %>" alt=""> 
+                                                            <img height="80px" src="/<%= item.thumb_image %>" alt="">
                                                             <br>
                                                             <%= item._id %>
                                                         </td>
@@ -86,9 +86,10 @@
                                                             <div class="form-check form-switch d-inline-block">
                                                                 <input <%=item.published?'checked':'' %>
                                                                 class="form-check-input" type="checkbox" role="switch"
-                                                                onchange="change_status(`<%= item._id %>`)"
-                                                                id="flexSwitchCheckChecked<%= item._id %>">
-                                                                <label class="form-check-label" for="flexSwitchCheckChecked<%= item._id %>"></label>
+                                                                onchange="change_publish(`<%= item._id %>`)"
+                                                                    id="flexSwitchCheckChecked<%= item._id %>">
+                                                                        <label class="form-check-label"
+                                                                            for="flexSwitchCheckChecked<%= item._id %>"></label>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -96,8 +97,9 @@
                                                                 <input <%=item.status?'checked':'' %>
                                                                 class="form-check-input" type="checkbox" role="switch"
                                                                 onchange="change_status(`<%= item._id %>`)"
-                                                                id="flexSwitchCheckChecked<%= item._id %>">
-                                                                <label class="form-check-label" for="flexSwitchCheckChecked<%= item._id %>"></label>
+                                                                    id="flexSwitchCheckChecked<%= item._id %>">
+                                                                        <label class="form-check-label"
+                                                                            for="flexSwitchCheckChecked<%= item._id %>"></label>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -177,9 +179,9 @@
                             el.innerHTML = this.selected_count();
                         })
                     },
-                    delete_selected: async function(){
-                        if(this.selected_items.length && window.confirm("export ??") ){
-                            let response = await fetch("/dashboard/category/delete-by-ids",{
+                    delete_selected: async function () {
+                        if (this.selected_items.length && window.confirm("export ??")) {
+                            let response = await fetch("/dashboard/blog/delete-by-ids", {
                                 method: "POST",
                                 headers: {
                                     'content-type': 'application/json',
@@ -190,14 +192,14 @@
                             })
                             let status = await response.json();
                             console.log(status)
-                            if(status.deletedCount){
+                            if (status.deletedCount) {
                                 window.location.reload();
                             }
                         }
                     },
-                    export_selected: async function(){
-                        if(this.selected_items.length && window.confirm("export ??") ){
-                            let response = await fetch("/dashboard/category/from-ids",{
+                    export_selected: async function () {
+                        if (this.selected_items.length && window.confirm("export ??")) {
+                            let response = await fetch("/dashboard/blog/from-ids", {
                                 method: "POST",
                                 headers: {
                                     'content-type': 'application/json',
@@ -210,30 +212,48 @@
 
                             console.log(categories);
                             let rows = [];
-                            categories.forEach((i)=>{
-                                let {_id:id, title, creator} = i;
+                            categories.forEach((i) => {
+                                let { _id: id, title, short_description, creator } = i;
                                 rows.push([
                                     id,
                                     title,
-                                    creator.username,
-                                    creator._id
+                                    short_description,
+                                    creator?.username,
+                                    creator?._id
                                 ])
                             })
 
                             console.log(rows);
 
-                            csvExport.setFileName("categories.csv")
-                                .setColumns(['id','title','creator','creator id'])
+                            csvExport.setFileName("blogs.csv")
+                                .setColumns(['id', 'title', 'short_description', 'creator', 'creator id'])
                                 .addRows(rows)
                                 .exportFile();
                         }
                     }
                 }
-                
-                async function change_status(id){
+
+                async function change_publish(id) {
                     let event_status = event.target.checked;
                     console.log(event_status, id)
-                    let response = await fetch("/dashboard/category/status-update",{
+                    let response = await fetch("/dashboard/blog/published-update", {
+                        method: "POST",
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id,
+                            status: event_status ? 1 : 0,
+                        }),
+                    })
+                    let res_status = await response.json();
+                    console.log(res_status);
+                }
+
+                async function change_status(id) {
+                    let event_status = event.target.checked;
+                    console.log(event_status, id)
+                    let response = await fetch("/dashboard/blog/status-update", {
                         method: "POST",
                         headers: {
                             'content-type': 'application/json',
@@ -282,7 +302,7 @@
                     // Generate the HTML for the pagination
                     paginationHTML += `
                         <li class="page-item">
-                            <a class="page-link" onclick="goToPage(${currentPage - 1})"  href="/dashboard/category?page=${currentPage - 1}" aria-label="Previous">
+                            <a class="page-link" onclick="goToPage(${currentPage - 1})"  href="/dashboard/blog?page=${currentPage - 1}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -291,7 +311,7 @@
                     if (startPage > 1) {
                         paginationHTML += `
                             <li class="page-item">
-                                <a class="page-link" onclick="goToPage(${1})"  href="/dashboard/category?page=1">1</a>
+                                <a class="page-link" onclick="goToPage(${1})"  href="/dashboard/blog?page=1">1</a>
                             </li>
                          `;
                         if (startPage > 2) {
@@ -305,7 +325,7 @@
                     for (let i = startPage; i <= endPage; i++) {
                         paginationHTML += `
                             <li class="page-item">
-                                <a class="page-link" onclick="goToPage(${i})"  href="/dashboard/category?page=${i}">${i}</a>
+                                <a class="page-link" onclick="goToPage(${i})"  href="/dashboard/blog?page=${i}">${i}</a>
                             </li>
                         `;
                     }
@@ -316,14 +336,14 @@
                         }
                         paginationHTML += `
                         <li class="page-item">
-                            <a class="page-link" onclick="goToPage(${pageCount})" href="/dashboard/category?page=${pageCount}">${pageCount}</a>
+                            <a class="page-link" onclick="goToPage(${pageCount})" href="/dashboard/blog?page=${pageCount}">${pageCount}</a>
                         </li>
                       `;
                     }
 
                     paginationHTML += `
                         <li class="page-item">
-                            <a class="page-link" onclick="goToPage(${currentPage + 1})" href="/dashboard/category?page=${currentPage + 1}" aria-label="Next">
+                            <a class="page-link" onclick="goToPage(${currentPage + 1})" href="/dashboard/blog?page=${currentPage + 1}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -343,6 +363,6 @@
                 }
 
                 document.getElementById("paginate").innerHTML = createPagination(+`<%= limit %>`, +`<%= count %>`, +`<%= page %>`);
-                
+
             </script>
             <%- include('../../layouts/dashboard/main_content_bottom_html') %>
