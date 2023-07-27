@@ -1,4 +1,4 @@
-<%- include('../layouts/header', {
+<%- include('../layouts/frontend/head', {
     title: null
 }) %>
     <section class="py-5">
@@ -20,4 +20,6 @@
             </form>
         </div>
     </section>
-    <%- include('../layouts/footer') %>
+    <%- include('../layouts/frontend/footer', {
+        title: null
+    }) %>
