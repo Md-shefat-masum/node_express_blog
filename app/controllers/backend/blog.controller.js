@@ -172,7 +172,7 @@ const controllers = {
 	},
 
 	show: async function (req, res) {
-		let data = await categoryModel.findOne().where({ _id: req.params.id }).populate("creator").exec();
+		let data = await blogModel.findOne().where({ _id: req.params.id }).populate("creator").exec();
 		return res.render(`backend/${controllers.folder_prefix}/show`, {
 			data,
 		});
@@ -244,29 +244,38 @@ const controllers = {
 	},
 
 	destory: async function (req, res) {
-		await categoryModel.deleteOne().where({ _id: req.params.id }).exec();
+		await blogModel.deleteOne().where({ _id: req.params.id }).exec();
 		return res.redirect(`/dashboard/${controllers.route_prefix}`);
 	},
 
 	from_ids: async function (req, res) {
 		let in_ids = req.body.in_ids;
-		let categories = await categoryModel.where("_id").in(in_ids).find().populate('creator').exec();
-		return res.status(200).json(categories);
+		let data = await blogModel.where("_id").in(in_ids).find().populate('creator').exec();
+		return res.status(200).json(data);
 	},
 
 	delete_by_ids: async function (req, res) {
 		let in_ids = req.body.in_ids;
-		let categories = await categoryModel.where("_id").in(in_ids).deleteMany().exec();
-		return res.status(200).json(categories);
+		let data = await blogModel.where("_id").in(in_ids).deleteMany().exec();
+		return res.status(200).json(data);
 	},
 
+	published_update: async function (req, res) {
+		let { id, status } = req.body;
+		// let category = await categoryModel.where("_id").equals(id).findOne().exec();
+		// category.status = status;
+		// category.save();
+		console.log(req.body);
+		let response = await blogModel.updateOne({ _id: id }, { status: status }).exec();
+		return res.status(200).json(response);
+	},
 	status_update: async function (req, res) {
 		let { id, status } = req.body;
 		// let category = await categoryModel.where("_id").equals(id).findOne().exec();
 		// category.status = status;
 		// category.save();
-
-		let response = await categoryModel.updateOne({ _id: id }, { status: status }).exec();
+		console.log(req.body);
+		let response = await blogModel.updateOne({ _id: id }, { status: status }).exec();
 		return res.status(200).json(response);
 	},
 };
