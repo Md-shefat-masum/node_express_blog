@@ -14,6 +14,7 @@ router
 		let user = await userModel.where({ email: email }).findOne();
 		if (user) {
 			let passMatch = await bcrypt.compare(password, user.password);
+			console.log(user, passMatch, password);
 			if (passMatch) {
 				
 				let data = {
