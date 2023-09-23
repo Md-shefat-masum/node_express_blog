@@ -10,11 +10,7 @@ router
 	.get("/about", function (req, res) {
 		return res.render("about");
 	})
-	.get("/login", function (req, res) {
-		return res.render("auth/login");
-	})
-	.get("/signup", function (req, res) {
-		return res.render("auth/register");
-	})
+	.get("/login", website_controller.login)
+	.get("/signup", website_controller.signup)
 
 module.exports = () => router;
