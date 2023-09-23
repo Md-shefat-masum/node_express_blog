@@ -6,12 +6,12 @@ let data = [
 	{
 		username: "admin",
 		email: "admin@gmail.com",
-		password: "$2b$13$RaIE1hUYSfaQ5uj1c6dySey0yM2ZsmSflBviklzxLdcHg/cXMKixi",
+		password: "$2b$13$pfkXQsGtSGLu/oPrU5cNuebG6o6zUK7tX70N.ACkakfJ9niKe3eXy",
 	},
 	{
 		username: "user",
 		email: "user@gmail.com",
-		password: "$2b$13$RaIE1hUYSfaQ5uj1c6dySey0yM2ZsmSflBviklzxLdcHg/cXMKixi",
+		password: "$2b$13$pfkXQsGtSGLu/oPrU5cNuebG6o6zUK7tX70N.ACkakfJ9niKe3eXy",
 	},
 ];
 
