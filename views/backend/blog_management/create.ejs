@@ -148,6 +148,7 @@
 
                     [...document.querySelectorAll('.form_error')].forEach(el=>el.remove());
 
+                    tinymce.triggerSave();
                     let formData = new FormData(form);
                     let response = await fetch(`${form.action}`,{
                         method: form.method,
