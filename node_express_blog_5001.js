@@ -62,8 +62,8 @@ server.use(allRoutes());
 mongoose.connect(db_url)
 	.then(()=>{
 		console.log('db connected');
-		server.listen(5000, () => {
-			console.log(`app is listening on http://127.0.0.1:5000`);
+		server.listen(5001, () => {
+			console.log(`app is listening on http://127.0.0.1:5001`);
 		});
 	});
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const isAuthMiddleware = require("../../app/middlewares/isAuth.middleware");
-const { share_check_auth } = require("../..");
+const { share_check_auth } = require("../../node_express_blog_5001");
 const website_controller = require("../../app/controllers/frontend/wbsite.controller");
 const router = express.Router();
 
