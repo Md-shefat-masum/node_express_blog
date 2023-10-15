@@ -1,6 +1,6 @@
 const express = require("express");
 const isAuthMiddleware = require("../../app/middlewares/isAuth.middleware");
-const { server_locals } = require("../../node_express_blog_5001");
+const { server_locals } = require("../../node_express_blog_5002");
 const userModel = require("../../app/models/user.model");
 const router = express.Router();
 const bcrypt = require('bcrypt')
