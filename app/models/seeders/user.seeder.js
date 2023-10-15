@@ -15,14 +15,9 @@ let data = [
 	},
 ];
 
-module.exports = () => mongoose.connect(db_url).then(async () => {
+module.exports = async () => {
 	console.log("\n");
 	console.log("user seeding");
-
 	await userModel.deleteMany({});
 	let response = await userModel.insertMany(data);
-
-    console.log("user seeding complete");
-
-	console.log("\n");
-});
+}
