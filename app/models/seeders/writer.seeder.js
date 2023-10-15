@@ -2,7 +2,7 @@ const { default: mongoose, Schema } = require("mongoose");
 const { db_url } = require("../../../configs/db.config");
 const writerModel = require("../writer.model");
 
-let categories = [
+let data = [
 	{
 		name: "Mulk Raj Anand",
 		creator: "645bc6f892c7867fa8949987",
@@ -25,14 +25,9 @@ let categories = [
 	},
 ];
 
-module.exports = () => mongoose.connect(db_url).then(async () => {
+module.exports = async () => {
 	console.log("\n");
-	console.log("writer seeding");
-
+	console.log("user seeding");
 	await writerModel.deleteMany({});
-	let response = await writerModel.insertMany(categories);
-
-    console.log("writer seeding complete");
-
-	console.log("\n");
-});
+	let response = await writerModel.insertMany(data);
+}
