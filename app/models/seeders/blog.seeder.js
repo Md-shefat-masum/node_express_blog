@@ -49,15 +49,9 @@ const demo_blog = async () => {
 	};
 }
 
-module.exports = () => mongoose.connect(db_url).then(async () => {
+module.exports = async () => {
 	console.log("\n");
 	console.log("blog seeding");
-
 	await blogModel.deleteMany({});
-	// let response = await blogModel.create(await demo_blog());
-	let response = await blogModel.create(await demo_blog());
-
-    console.log("blog seeding complete");
-
-	console.log("\n");
-});
+	let response = await blogModel.insertMany(await demo_blog());
+}
